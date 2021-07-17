@@ -1,7 +1,7 @@
 export class User {
     id!: number;
     name!: string;
-    login!: string;
+    username!: string;
     password!: string;
     email!: string;
     phoneNumber!: string;
@@ -10,8 +10,8 @@ export class User {
         
     // }
 
-    constructor (login: string, password: string, name?: string, email?: string, phoneNumber?: string) {
-        this.login = login;
+    constructor (username: string, password: string, name?: string, email?: string, phoneNumber?: string) {
+        this.username = username;
         this.password = password;
         if (name && email && phoneNumber) {
             this.name = name;

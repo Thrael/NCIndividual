@@ -25,11 +25,12 @@ export class LoginFormComponent implements OnInit {
     console.log(this.loginForm.value);
     let user = new User(this.loginForm.value.login, this.loginForm.value.password);
     let logged = this.userService.loginUser(user);
-    console.log(logged.subscribe(logged => {
-      user = logged;
-    }))
+    let response;
+    // console.log(logged.subscribe(logged => {
+    //   response = logged;
+    // }))
     console.log(logged);
-    console.log(user);
+    console.log(response);
     this.router.navigate(['']);
   }
 

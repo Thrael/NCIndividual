@@ -13,8 +13,8 @@ export class PositionService {
   // private positionsSaveUrl: string;
 
   constructor(private http: HttpClient) {
-    this.positionsUrl = 'https://localhost:8080/rest/v1/positions';
-    this.positionsUrl3 = 'https://localhost:8080/rest/v1/positions/3';
+    this.positionsUrl = 'https://localhost:8443/rest/v1/positions';
+    this.positionsUrl3 = 'https://localhost:8443/rest/v1/positions/3';
     // this.positionsSaveUrl = 'http://localhost:8080/rest/v1/users';
    }
 

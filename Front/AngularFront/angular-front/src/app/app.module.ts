@@ -15,6 +15,8 @@ import { AddwareFormComponent } from './addware-form/addware-form.component';
 import { AdduserFormComponent } from './adduser-form/adduser-form.component';
 import { ToppanelAnonComponent } from './toppanel-anon/toppanel-anon.component';
 import { ProfileComponent } from './profile/profile.component';
+import { PopupButtonComponent } from './popup-button/popup-button.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -27,13 +29,15 @@ import { ProfileComponent } from './profile/profile.component';
     AddwareFormComponent,
     AdduserFormComponent,
     ToppanelAnonComponent,
-    ProfileComponent
+    ProfileComponent,
+    PopupButtonComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [PositionService],
   bootstrap: [AppComponent]

@@ -8,12 +8,14 @@
             <label>Password</label>
             <input name="password" type="password" formControlName="password">
         </p>
+        <p *ngIf="error"> Error: {{ this.error }}</p>
         <p>
             <button type="submit">
                 Submit
             </button>
         </p>
     </div>
+    
 </form>
 
 <!-- [disabled]="!form.form.valid" -->

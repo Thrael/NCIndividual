@@ -1,3 +1,6 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { User } from '../User';
@@ -18,20 +21,34 @@ export class AdduserFormComponent implements OnInit {
     phoneNumber: new FormControl()
   });
 
-  constructor(private userService: UserService) { }
+  private error: string = "";
+
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private modalService: NgbModal) { };
 
   ngOnInit(): void {
   }
 
   onSubmit(): void {
     console.log(this.adduserForm.value);
-    let user = new User(this.adduserForm.value.login, this.adduserForm.value.password, this.adduserForm.value.name, this.adduserForm.value.email, this.adduserForm.value.phoneNumber);
-    let added = this.userService.saveUser(user);
-    console.log(added.subscribe(added => {
-      user = added;
-    }))
-    console.log(added);
-    console.log(user);
+    let user = new User(this.adduserForm.value.login,
+                      this.adduserForm.value.password,
+                      this.adduserForm.value.name,
+                      this.adduserForm.value.email,
+                      this.adduserForm.value.phoneNumber);
+
+    let subject: Subject<User> = this.userService.saveUser(user);
+    
+    subject.subscribe(
+      res => {
+        this.error = "";
+        this.modalService.dismissAll();
+        this.router.navigate(['']);
+      },
+      err => this.error = "Please try again."
+    )
   }
 
 }

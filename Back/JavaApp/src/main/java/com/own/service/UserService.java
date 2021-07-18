@@ -1,22 +1,21 @@
 package com.own.service;
 
-import com.own.entity.Role;
+import com.own.additional.CustomUserDetails;
 import com.own.entity.User;
 import com.own.exception.UserLoginAlreadyExistsException;
 import com.own.exception.UserNotFoundException;
 import com.own.repository.RoleRepository;
 import com.own.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,25 +26,20 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
-//    @Autowired
-//    private PBKDF2Hasher hasher;
-
-    // TODO: uncomment
-    @Autowired
-    private Pbkdf2PasswordEncoder encoder;
-
-//    @Autowired
-//    private PasswordEncoder encoder;
+    //@Autowired
+    private Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder();
 
     public User loginUser(User user) throws UserNotFoundException {
-        String message = "User with this login does not exists: " + user.getUsername();
-        User found = userRepository.findByUsername(user.getUsername()).orElseThrow(() ->new UserNotFoundException(message));
-//        if (found == null) {
-//            String message = "User with this login does not exists: " + user.getUsername();
-//            throw new UserNotFoundException(message);
-//        }
-//        return hasher.checkPassword(user.getPassword(), login.getPassword());
+
+        //user should be somehow associated with session
+        User found = userRepository
+                        .findByUsername(user.getUsername())
+                        .orElseThrow(() ->new UserNotFoundException(
+                                "User with this login does not exists: " + user.getUsername()));
+
         if (encoder.matches(user.getPassword(), found.getPassword())) {
+            //we don't want to return password to UI.
+            found.setPassword(null);
             return found;
         } else {
             return null;
@@ -53,38 +47,25 @@ public class UserService {
     }
 
     public User signUp(@Valid User user) throws UserLoginAlreadyExistsException {
-        System.out.println(user);
-//        User existed = userRepository.findByLogin(user.getLogin());
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            String message = "User with this login already exists: " + user.getUsername();
-            throw new UserLoginAlreadyExistsException(message);
+            throw new UserLoginAlreadyExistsException("User with this login already exists: " + user.getUsername());
         }
 
-//        user.setPassword(hasher.hash(user.getPassword()));
-//        PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
+        user.setRoles(new HashSet<>());
+        user.getRoles().add(roleRepository.findByName("USER").orElse(null));
+        if (user.getUsername().equalsIgnoreCase("admin")) {
+            user.getRoles().add(roleRepository.findByName("ADMIN").orElse(null));
+        }
 
-        // TODO: TEMPORARY
-//        if (user.getUsername().equals("admin")) {
-//            user.setRoles("ADMIN");
-//        }
+        user.setPassword(encoder.encode(user.getPassword()));
 
-        user.setRoles(new ArrayList<Role>());
-
-        System.out.println("Current password is: " + user.getPassword());
-        String s = encoder.encode(user.getPassword());
-        System.out.println("Encoded password is: " + s);
-        user.setPassword(s);
-
-        assignRole(user, "USER");
-
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        return saved;
     }
 
-    public void assignRole(User user, String role) {
-
-        user.getRoles().add(roleRepository.findByName(role));
-
-
+    public void logoff() {
+        //user should be somehow de-associated with session
+        System.out.println("user logged off");
     }
 
 }

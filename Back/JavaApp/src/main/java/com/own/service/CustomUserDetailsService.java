@@ -33,14 +33,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user.map(CustomUserDetails::new).get();
     }
 
-    // TODO: uncomment
-    @Bean
-    public Pbkdf2PasswordEncoder getPasswordEncoder() {
-        return new Pbkdf2PasswordEncoder();
-    }
-
-//    @Bean
-//    public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
 }

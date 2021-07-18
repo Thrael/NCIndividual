@@ -1,8 +1,10 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { User } from '../User';
 import { UserService } from '../user-service.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -16,22 +18,26 @@ export class LoginFormComponent implements OnInit {
     password: new FormControl()
   });
 
-  constructor(private userService: UserService, private router: Router) { };
+  public error: string = "";
+
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private modalService: NgbModal) { };
 
   ngOnInit(): void {
   };
 
   onSubmit(): void {
     console.log(this.loginForm.value);
-    let user = new User(this.loginForm.value.login, this.loginForm.value.password);
-    let logged = this.userService.loginUser(user);
-    let response;
-    // console.log(logged.subscribe(logged => {
-    //   response = logged;
-    // }))
-    console.log(logged);
-    console.log(response);
-    this.router.navigate(['']);
+    let subject: Subject<User> = this.userService.loginUser(this.loginForm.value.login, this.loginForm.value.password);
+    subject.subscribe(
+      (res) => {
+        this.error = "";
+        this.modalService.dismissAll();
+        this.router.navigate(['']);
+      },
+      (err) => this.error = "Please try again."
+    );
   }
-
 }

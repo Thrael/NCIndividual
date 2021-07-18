@@ -1,0 +1,9 @@
+<div *ngIf="this.getCurrentUser()" >
+    <ul *ngFor="let user of [this.getCurrentUser()]" >
+        <li>{{user?.name}}</li> 
+        <li>{{user?.username}}</li> 
+    </ul>
+</div>
+<div *ngIf="!this.getCurrentUser()" >
+    <span> Something went wrong!!!</span>
+</div>

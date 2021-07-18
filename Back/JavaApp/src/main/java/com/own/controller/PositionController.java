@@ -34,7 +34,6 @@ public class PositionController {
     }
 
     @PostMapping(value = "/positions", consumes = {MediaType.APPLICATION_JSON_VALUE})
-//    @PreAuthorize("hasRole('ROLE_STOREKEEPER')")
     public void addPosition(@RequestBody Position position) {
         positionRepository.save(position);
     }

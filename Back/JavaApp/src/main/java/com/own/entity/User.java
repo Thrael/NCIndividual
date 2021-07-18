@@ -20,7 +20,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Size(min = 2)
     private String name;
 
     @Size(min = 3, max = 30)
@@ -38,7 +37,6 @@ public class User {
 
 //    private String roles;
 
-    @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(

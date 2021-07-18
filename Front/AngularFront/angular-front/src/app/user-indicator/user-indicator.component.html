@@ -1,0 +1,24 @@
+<ng-template #signIn let-modal>
+    <app-login-form></app-login-form>
+</ng-template>
+
+<ng-template #signUp let-modal>
+    <app-adduser-form></app-adduser-form>
+</ng-template>
+
+<ng-template #details let-modal>
+    <app-user-details></app-user-details>
+</ng-template>
+
+<span>
+    <span *ngIf="getCurrentUser()">
+        <button class="btn btn-sm btn-outline-primary" (click)="openPopap(details)">{{getCurrentUser()?.username}}</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="logOff()">Log Off</button>
+    </span>
+    <span *ngIf="!getCurrentUser()">
+        <button class="btn btn-sm btn-outline-primary" (click)="openPopap(signIn)">Log In</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="openPopap(signUp)">Register</button>
+    </span>
+</span>
+
+

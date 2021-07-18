@@ -17,6 +17,8 @@ import { ToppanelAnonComponent } from './toppanel-anon/toppanel-anon.component';
 import { ProfileComponent } from './profile/profile.component';
 import { PopupButtonComponent } from './popup-button/popup-button.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserIndicatorComponent } from './user-indicator/user-indicator.component';
+import { UserDetailsComponent } from './user-details/user-details.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AdduserFormComponent,
     ToppanelAnonComponent,
     ProfileComponent,
-    PopupButtonComponent
+    PopupButtonComponent,
+    UserIndicatorComponent,
+    UserDetailsComponent
   ],
   imports: [
     BrowserModule,

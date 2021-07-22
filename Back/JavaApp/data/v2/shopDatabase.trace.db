@@ -1178,3 +1178,7 @@ select * frim user_roles [42000-200]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USER_ROLES" не найдена
 Table "USER_ROLES" not found; SQL statement:
 select * from user_roles [42102-200]
+2021-07-22 00:57:23 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+delete FROM USERS [42102-200]

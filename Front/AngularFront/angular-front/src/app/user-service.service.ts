@@ -30,24 +30,35 @@ export class UserService {
   }
 
   public loginUser(username: string, password: string): Subject<User> {
+    
+    const loginForm: FormData = new FormData();
+    loginForm.append('username', username);
+    loginForm.append('password', password);
 
-    let body = new User(username, password);
-    return this.postUser(this.usersLoginUrl, body);
+    const subject = new ReplaySubject<User>(5);
+    subject.subscribe(res => this.user = res, err => console.log(err));
+
+    this.http.post<User>(this.usersLoginUrl, loginForm, {
+      headers: new HttpHeaders({ 
+        //'Content-Type' : 'application/x-www-form-urlencoded',  https://github.com/github/fetch/issues/505
+        'Access-Control-Allow-Origin':'*'
+      })
+    })
+      .subscribe(
+        res => {
+          subject.next(res)
+        },
+        err => subject.error(err))
+
+    return subject;
   }
 
   private postUser(url: string, user: User): Subject<User> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 
-        'Content-Type' : 'application/json',
-        'Access-Control-Allow-Origin':'*'
-      })
-    };
 
     const subject = new ReplaySubject<User>(5);
-
     subject.subscribe(res => this.user = res, err => console.log(err));
 
-    this.http.post<User>(url, user, httpOptions)
+    this.http.post<User>(url, user, this.getHttpOptions())
       .subscribe(
         res => {
           subject.next(res)
@@ -64,20 +75,20 @@ export class UserService {
   public logOff() {
     console.log("init logoff")
 
-    const httpOptions =
-     {
-      headers: new HttpHeaders({ 
-        'Content-Type' : 'application/json',
-        'Access-Control-Allow-Origin':'*'
-      })
-    };
-
-
-    this.http.post(this.userLogOffUrl, "", httpOptions)
+    this.http.post(this.userLogOffUrl, "", this.getHttpOptions())
       .subscribe(
         res => this.user = undefined,
         err => console.log(err),
         () => console.log("log off done")
         );
+  }
+
+  private getHttpOptions() {
+    return {
+      headers: new HttpHeaders({ 
+        'Content-Type' : 'application/json',
+        'Access-Control-Allow-Origin':'*'
+      })
+    };
   }
 }

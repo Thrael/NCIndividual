@@ -43,22 +43,6 @@ public class SpringBootApp implements ApplicationContextAware {
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        RoleRepository roleRepo = applicationContext.getBean(RoleRepository.class);
-//        Role adminRole = roleRepo.findByName("ADMIN").orElse(null);
-//        if (adminRole == null) {
-//            roleRepo.save(new Role("ADMIN"));
-//        }
-//
-//        UserService userService = applicationContext.getBean(UserService.class);
-//        try {
-//            User admin = new User();
-//            admin.setName("admin");
-//            admin.setPassword("admin123");
-//
-//            userService.signUp(admin);
-//        } catch (UserLoginAlreadyExistsException ex) {
-//            //do nothing
-//        }
-
+        //do something on startup
     }
 }

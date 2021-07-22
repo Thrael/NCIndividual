@@ -7,8 +7,10 @@ import com.own.exception.UserNotFoundException;
 import com.own.repository.RoleRepository;
 import com.own.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +27,22 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+//
+//    @Autowired
+//    private AuthenticationManager authManager;
 
-    //@Autowired
-    private Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder();
+    @Autowired
+    private PasswordEncoder encoder;
 
     public User loginUser(User user) throws UserNotFoundException {
 
-        //user should be somehow associated with session
+        //exception should be more generic. OWASP recommendation.
         User found = userRepository
                         .findByUsername(user.getUsername())
                         .orElseThrow(() ->new UserNotFoundException(
                                 "User with this login does not exists: " + user.getUsername()));
 
-        if (encoder.matches(user.getPassword(), found.getPassword())) {
+        if (found != null) {
             //we don't want to return password to UI.
             found.setPassword(null);
             return found;
@@ -46,7 +51,7 @@ public class UserService {
         }
     }
 
-    public User signUp(@Valid User user) throws UserLoginAlreadyExistsException {
+    public User signUp(User user) throws UserLoginAlreadyExistsException {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UserLoginAlreadyExistsException("User with this login already exists: " + user.getUsername());
         }
@@ -59,8 +64,7 @@ public class UserService {
 
         user.setPassword(encoder.encode(user.getPassword()));
 
-        User saved = userRepository.save(user);
-        return saved;
+        return userRepository.save(user);
     }
 
     public void logoff() {

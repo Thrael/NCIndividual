@@ -1,17 +1,14 @@
 package com.own.additional;
 
+import com.own.entity.Privilege;
 import com.own.entity.Role;
 import com.own.entity.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
@@ -19,31 +16,37 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private Collection<Role> roles;
-//    private Collection<GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.roles = user.getRoles();
-
-        //        this.authorities = Arrays.stream(user.getRoles().split(","))
-        //                .map(SimpleGrantedAuthority::new)
-        //                .collect(Collectors.toList());
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-            List<GrantedAuthority> authorities
-                    = new ArrayList<>();
-            for (Role role: roles) {
-                authorities.add(new SimpleGrantedAuthority(role.getName()));
-                role.getPrivileges().stream()
-                        .map(p -> new SimpleGrantedAuthority(p.getName()))
-                        .forEach(authorities::add);
-            }
+        Collection<GrantedAuthority> authorities = getRolesAuthorities();
+        //authorities.addAll(getPrivilegeAuthorities());
+        return authorities;
+    }
 
-            return authorities;
+    @NotNull
+    private Set<GrantedAuthority> getRolesAuthorities() {
+        return roles.stream()
+                .map(role -> role.getName())
+                .map(roleName -> "ROLE_" + roleName)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+    }
+
+    @NotNull
+    private Set<SimpleGrantedAuthority> getPrivilegeAuthorities() {
+        return roles.stream()
+                .flatMap(role -> role.getPrivileges().stream())
+                .map(Privilege::getName)
+                .distinct()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

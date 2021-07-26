@@ -1,8 +1,8 @@
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { ListPositions } from '../list-positions';
 import { Position } from '../Position'
-import { PositionListComponent } from '../position-list/position-list.component';
 import { PositionService } from '../position-service.service';
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-product-catalog',
@@ -11,20 +11,39 @@ import { PositionService } from '../position-service.service';
 })
 export class ProductCatalogComponent implements OnInit {
 
-  listPos: PositionListComponent;
   positions: Position[];
+  type: string | null = null;
 
-  constructor(private positionService: PositionService) {
-    this.listPos = new PositionListComponent(positionService);
-    this.positions = this.listPos.getPositions();
+  constructor(private positionService: PositionService,
+             private route: ActivatedRoute) {
+    this.positions = [
+      {
+        id: 1,
+        name: "prod1",
+        price: 1,
+        description: "desc"
+      },
+      {
+        id: 2,
+        name: "prod12",
+        price: 1,
+        description: "desc"
+      },
+      {
+        id: 3,
+        name: "prod33",
+        price: 1,
+        description: "desc"
+      }
+    ];
    }
 
   ngOnInit(): void {
-    this.positionService.retrieveAllPositions().subscribe(data => {
-      this.positions = data;
-    });
-    console.log(this.positions);
-    // this.positions = this.listPos.getPositions();
+    this.route.queryParamMap
+      .subscribe(params => {
+        this.type = params.get("type")
+        console.log(this.type + " : catalog.type")
+      });
   }
   
   

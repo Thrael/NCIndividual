@@ -1,12 +1,23 @@
-<!-- <p>topboard works!</p> -->
+
+
+<ng-template #catalog let-modal>
+    <app-catalog-menu></app-catalog-menu>
+</ng-template>
+
 <ul class="topbar-menu">
-    <li *ngFor="let menuitem of menuitems">
-        <span *ngIf="menuitem.name != 'Категории'">{{menuitem.name}}</span>
-        <span *ngIf="menuitem.name == 'Категории'">
-            <select>
-                <option>Категории:</option>
-                <option *ngFor="let categ of categories">{{categ.name}}</option>
-            </select>
-        </span>
-    </li>
+    <li><span>Главная</span></li>
+    <li><span>
+            <!--button type="button" class="btn btn-outline-primary" [autoClose]="'outside'"
+                     placement="bottom" [ngbPopover]="catalog" [popoverTitle]="'Каталог'">Каталог</!--button-->
+        
+            <div ngbDropdown container="body" class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownArea" ngbDropdownToggle>Каталог</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownArea" style="z-index: 1000;">
+                    <app-catalog-menu></app-catalog-menu>
+                </div>
+            </div>
+    </span></li>
+    <li><span>Летний отдых</span></li>
+    <li><span>Распродажа</span></li>
+    <li><span>Контакты</span></li>
 </ul>

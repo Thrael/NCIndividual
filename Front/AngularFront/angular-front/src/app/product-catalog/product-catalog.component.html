@@ -1,24 +1,5 @@
-<!-- <p>product-catalog works!</p> -->
-<div class="card-list">
-    <ul class="item-card" *ngFor="let pos of positions">
-        <li>
-            <!-- <div class="item-card-component">
-                <img [src]="pos.imagePath">
-            </div> -->
-            <div class="item-card-component">
-                <p>
-                    id: {{pos.id}}
-                </p>
-                <p>
-                    name: {{pos.name}}
-                </p>
-                <p>
-                    price: {{pos.price}}
-                </p>
-                <p>
-                    description: {{pos.description}}
-                </p>
-            </div>
-        </li>
-    </ul>
-</div>
+<mat-grid-list cols="8" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let pos of positions">
+        {{pos.name}}
+    </mat-grid-tile>
+</mat-grid-list>

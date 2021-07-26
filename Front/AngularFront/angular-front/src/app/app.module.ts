@@ -19,6 +19,11 @@ import { PopupButtonComponent } from './popup-button/popup-button.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserIndicatorComponent } from './user-indicator/user-indicator.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CatalogMenuComponent } from './catalog-menu/catalog-menu.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { PromotionsComponent } from './promotions/promotions.component';
 
 @NgModule({
   declarations: [
@@ -34,14 +39,19 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     ProfileComponent,
     PopupButtonComponent,
     UserIndicatorComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    CatalogMenuComponent,
+    PromotionsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
+    MatTreeModule,
+    MatGridListModule
   ],
   providers: [PositionService],
   bootstrap: [AppComponent]

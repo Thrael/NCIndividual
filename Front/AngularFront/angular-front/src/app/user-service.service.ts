@@ -1,25 +1,24 @@
+import { EventBusService } from './eventsourcing/eventbus.service';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { User } from './User';
+import { BusEvent } from './eventsourcing/bus-event';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private usersUrl: string;
-  private usersLoginUrl: string;
-  private userSaveUrl: string;
-  private userLogOffUrl: string;
+  private usersUrl: string = 'https://localhost:8443/rest/v1/users';
+  private usersLoginUrl: string = 'https://localhost:8443/rest/v1/users/login';
+  private userSaveUrl: string = 'https://localhost:8443/rest/v1/users/add';
+  private userLogOffUrl: string = 'https://localhost:8443/rest/v1/users/logoff';
   private user?: User;
 
-    constructor(private http: HttpClient) {
-    this.usersUrl = 'https://localhost:8443/rest/v1/users';
-    this.usersLoginUrl = 'https://localhost:8443/rest/v1/users/login';
-    this.userSaveUrl = 'https://localhost:8443/rest/v1/users/add';
-    this.userLogOffUrl = 'https://localhost:8443/rest/v1/users/logoff';
-  }
+    constructor(
+      private http: HttpClient, 
+      private eventService: EventBusService) {}
 
   public retrieveAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.usersUrl);
@@ -36,7 +35,15 @@ export class UserService {
     loginForm.append('password', password);
 
     const subject = new ReplaySubject<User>(5);
-    subject.subscribe(res => this.user = res, err => console.log(err));
+    subject.subscribe(
+      res => {
+        this.user = res
+        this.eventService.post(new BusEvent("login", "OK", "login success", res))
+      },
+      err => { 
+        this.eventService.post(new BusEvent("login", "NOK", "login error", err))
+        console.log(err)
+      });
 
     this.http.post<User>(this.usersLoginUrl, loginForm, {
       headers: new HttpHeaders({ 

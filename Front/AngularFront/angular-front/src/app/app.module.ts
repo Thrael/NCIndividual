@@ -24,6 +24,7 @@ import { CatalogMenuComponent } from './catalog-menu/catalog-menu.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { PromotionsComponent } from './promotions/promotions.component';
+import { ToastContainerComponent } from './toast-container/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PromotionsComponent } from './promotions/promotions.component';
     UserIndicatorComponent,
     UserDetailsComponent,
     CatalogMenuComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    ToastContainerComponent
   ],
   imports: [
     BrowserModule,

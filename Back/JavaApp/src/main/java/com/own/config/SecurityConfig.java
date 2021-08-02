@@ -1,6 +1,5 @@
 package com.own.config;
 
-import com.own.additional.CustomUserDetails;
 import com.own.repository.UserRepository;
 import com.own.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -39,6 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private PasswordEncoder passwordEncoder;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
@@ -54,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("rest/v1/positions").permitAll()
+                .antMatchers("/rest/v1/**").permitAll()
+                .antMatchers("/rest/v1/positions").permitAll()
                 .antMatchers("/rest/v1/users/add").permitAll()
                 .antMatchers("/rest/v1/users/login").permitAll()
                 .antMatchers("/rest/v1/users/logoff").authenticated()

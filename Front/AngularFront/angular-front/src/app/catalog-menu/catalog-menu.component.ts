@@ -1,5 +1,7 @@
+import { Category } from './../entity/category';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router'
+import { CategoryService } from '../services/category.service';
 
 
 @Component({
@@ -9,63 +11,19 @@ import { Router } from '@angular/router'
 })
 export class CatalogMenuComponent implements OnInit {
 
-  public data = [
-    {
-      name:"item1",
-      children: [
-        {
-          name: "child1",
-          children: [
-            {
-              name:"child of child",
-              children:[]
-            }
-          ]
-        },
-        {
-          name: "with children",
-          children: [
-            {
-              name:"child of child",
-              children:[]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name:"item2",
-      children: [
-        {
-          name: "child1",
-          children: [
-            {
-              name:"child of child",
-              children:[]
-            }
-          ]
-
-        },
-        {
-          name: "with children",
-          children: [
-            {
-              name:"child of child",
-              children:[]
-            }
-          ]
-        }
-      ]
-    }
-
-  ];
-
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private categoryService: CategoryService) { }
 
   ngOnInit(): void {
+
+    this.categoryService.getAllCategories()
   }  
 
   public navigate(type: string): void {
     this.router.navigate(['/catalog'], { queryParams: { type: type }});
+  }
+
+  public getCategories(): Category[] {
+    return this.categoryService.categories;
   }
 }

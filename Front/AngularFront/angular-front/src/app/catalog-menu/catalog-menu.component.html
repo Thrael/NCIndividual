@@ -1,32 +1,17 @@
-<!--
-<ng-template #recursiveList let-list>
-    <li class="list-group-item" *ngFor="let item of list">
-      <span><button ngbDropdownItem>{{item.name}}</button></span>
-      <ul class="list-group" *ngIf="item.children.length > 0">
-        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
-      </ul>
-    </li>
-</ng-template>
-
-<ul class="list-group">
-  <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: data }"></ng-container>
-</ul> 
--->
-
 <ng-template #recursiveList let-list>
     <li class="list-group-item" *ngFor="let item of list">
       <span><button ngbDropdownItem (click)="navigate(item.name)">{{item.name}}</button></span>
-      <ul class="list-group" *ngIf="item.children.length > 0">
-        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+      <ul class="list-group" *ngIf="item!.subCategories!.length">
+        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.subCategories }"></ng-container>
       </ul>
     </li>
 </ng-template>
 
 <ul class="list-group">
-    <li class="list-group-item" *ngFor="let item of data">
+    <li class="list-group-item" *ngFor="let item of getCategories()">
         <span><button ngbDropdownItem style="font-weight: 500;" (click)="navigate(item.name)">{{item.name}}</button></span>
-        <ul class="list-group" *ngIf="item.children.length > 0">
-          <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+        <ul class="list-group" *ngIf="item!.subCategories!.length">
+          <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.subCategories }"></ng-container>
         </ul>
     </li>
 </ul> 

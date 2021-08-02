@@ -1,4 +1,4 @@
-package com.own.additional;
+package com.own.config;
 
 import com.own.entity.Privilege;
 import com.own.entity.Role;
